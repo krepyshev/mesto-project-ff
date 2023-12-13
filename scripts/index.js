@@ -17,9 +17,8 @@ function addCard(card) {
 
 // @todo: Функция удаления карточки
 
-function deleteCard() {
-  const cards = document.querySelector('.card')
-  cards.remove();
+function deleteCard(card) {
+  card.remove();
 }
 
 
@@ -31,7 +30,8 @@ function renderHasCards(cards) {
     placesList.append(cardElement)
     const deleteCardButton = cardElement.querySelector('.card__delete-button')
     deleteCardButton.addEventListener('click', function () {
-      deleteCard()
+      const cards = container.querySelector('.card')
+      deleteCard(cards)
     })
   }
   
