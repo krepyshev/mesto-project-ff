@@ -6,11 +6,21 @@ const container = document.querySelector('.content');
 const placesList = container.querySelector('.places__list')
 
 
+
+
 // @todo: Функция создания карточки
-function addCard(card) {
+function createCard(card, deleteCardHandler) {
   const cardElement = cardTemplate.querySelector('.card').cloneNode(true)
   cardElement.querySelector('.card__title').textContent = card.name
   cardElement.querySelector('.card__image').src = card.link
+  cardElement.querySelector('.card__image').alt = card.name
+  
+  const deleteCardButton = cardElement.querySelector('.card__delete-button')
+
+  deleteCardButton.addEventListener('click', function () {
+    deleteCardHandler(cardElement)
+  })
+  
   return cardElement
 }
 
@@ -18,7 +28,7 @@ function addCard(card) {
 // @todo: Функция удаления карточки
 
 function deleteCard(card) {
-  card.remove();
+  card.remove()
 }
 
 
@@ -26,16 +36,10 @@ function deleteCard(card) {
 
 function renderHasCards(cards) {
   for (card of cards) {
-    const cardElement = addCard(card)
+    const cardElement = createCard(card, deleteCard)
     placesList.append(cardElement)
-    const deleteCardButton = cardElement.querySelector('.card__delete-button')
-    deleteCardButton.addEventListener('click', function () {
-      const cards = container.querySelector('.card')
-      deleteCard(cards)
-    })
   }
-  
-}
+  }
 
 renderHasCards(initialCards)
 
