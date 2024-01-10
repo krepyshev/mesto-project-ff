@@ -1,12 +1,13 @@
+import '../pages/index.css'
+import { initialCards } from '../scripts/cards'
+
+
 // @todo: Темплейт карточки
 const cardTemplate = document.querySelector('#card-template').content
 
 // @todo: DOM узлы
 const container = document.querySelector('.content');
 const placesList = container.querySelector('.places__list')
-
-
-
 
 // @todo: Функция создания карточки
 function createCard(card, deleteCardHandler) {
@@ -24,25 +25,18 @@ function createCard(card, deleteCardHandler) {
   return cardElement
 }
 
-
 // @todo: Функция удаления карточки
-
 function deleteCard(card) {
   card.remove()
 }
 
 
 // @todo: Вывести карточки на страницу
-
 function renderHasCards(cards) {
-  for (card of cards) {
+  for (let card of cards) {
     const cardElement = createCard(card, deleteCard)
     placesList.append(cardElement)
   }
   }
 
 renderHasCards(initialCards)
-
-
-
-
