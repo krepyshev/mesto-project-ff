@@ -2,15 +2,29 @@ import '../pages/index.css'
 import { initialCards } from '../scripts/cards'
 
 
-// @todo: Темплейт карточки
+// Темплейт карточки
 const cardTemplate = document.querySelector('#card-template').content
 
-// @todo: DOM узлы
+// DOM узлы
 const container = document.querySelector('.content');
 const placesList = container.querySelector('.places__list')
 
-// @todo: Функция создания карточки
-function createCard(card, deleteCardHandler) {
+const profileEditBtn = container.querySelector('.profile__edit-button')
+const profileAddBtn = container.querySelector('.profile__add-button')
+
+
+
+const editPopup = document.querySelector('.popup_type_edit')
+const newCardPopup = document.querySelector('.popup_type_new-card')
+
+const closePopupBtns = document.querySelectorAll('.popup__close')
+
+
+// const profileForm = document.forms['edit-profile']
+
+
+// Функция создания карточки
+function createCard(card, deleteCardHandler, openPopupHandler) {
   const cardElement = cardTemplate.querySelector('.card').cloneNode(true)
   cardElement.querySelector('.card__title').textContent = card.name
   cardElement.querySelector('.card__image').src = card.link
@@ -21,22 +35,75 @@ function createCard(card, deleteCardHandler) {
   deleteCardButton.addEventListener('click', function () {
     deleteCardHandler(cardElement)
   })
+
+  const cardImage = cardElement.querySelector('.card__image')
+  cardImage.src = card.link
+  cardImage.alt = card.name
+
+  const imagePopup = document.querySelector('.popup_type_image')
+
+  cardImage.addEventListener('click', function() {
+    openPopupHandler(imagePopup, cardImage.src, cardImage.alt)
+  })
   
   return cardElement
 }
 
-// @todo: Функция удаления карточки
+
+
+// Функция удаления карточки
 function deleteCard(card) {
   card.remove()
 }
 
 
-// @todo: Вывести карточки на страницу
+// Функция вывода карточек на страницу
 function renderHasCards(cards) {
   for (let card of cards) {
-    const cardElement = createCard(card, deleteCard)
+    const cardElement = createCard(card, deleteCard, openPopup)
     placesList.append(cardElement)
   }
   }
 
 renderHasCards(initialCards)
+
+
+
+// Функция открытия popup
+
+function openPopup(popup, imgSrc, imgAlt){
+  const imagePopup = document.querySelector('.popup__image')
+  if (imgSrc) {
+    imagePopup.src = imgSrc
+    imagePopup.alt = imgAlt || ''
+  }
+  popup.classList.add('popup_is-animated')
+  popup.classList.add('popup_is-opened')
+}
+
+// Функция закрытия popup
+
+function closePopup(popup){
+  popup.classList.remove('popup_is-opened')
+}
+
+
+// Прослушиватели
+
+profileEditBtn.addEventListener('click', function() {
+  openPopup(editPopup)
+})
+
+profileAddBtn.addEventListener('click', function() {
+  openPopup(newCardPopup)
+})
+
+closePopupBtns.forEach(function(closePopupBtn) {
+  closePopupBtn.addEventListener('click', function() {
+    const openedPopup = document.querySelector('.popup_is-opened')
+    if (openedPopup) {
+      closePopup(openedPopup)
+    }
+  })
+})
+
