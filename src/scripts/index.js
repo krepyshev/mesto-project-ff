@@ -6,7 +6,7 @@ import { initialCards } from '../scripts/cards'
 const cardTemplate = document.querySelector('#card-template').content
 
 // DOM узлы
-const container = document.querySelector('.content');
+const container = document.querySelector('.content')
 const placesList = container.querySelector('.places__list')
 
 const profileEditBtn = container.querySelector('.profile__edit-button')
@@ -17,11 +17,15 @@ const newCardPopup = document.querySelector('.popup_type_new-card')
 
 const closePopupBtns = document.querySelectorAll('.popup__close')
 
-// const profileForm = document.forms['edit-profile']
+const profileInfo = document.querySelector('.profile__info')
+const profileTitle = profileInfo.querySelector('.profile__title')
+const profileDescription = profileInfo.querySelector('.profile__description')
+
+
 
 // Функция создания карточки
 
-function createCard(card, deleteCardHandler, openPopupHandler) {
+function createCard(card, deleteCardHandler, openPopupHandler, likeCardHandler) {
 	const cardElement = cardTemplate.querySelector('.card').cloneNode(true)
 	cardElement.querySelector('.card__title').textContent = card.name
 	const cardImage = cardElement.querySelector('.card__image')
@@ -34,12 +38,16 @@ function createCard(card, deleteCardHandler, openPopupHandler) {
 		deleteCardHandler(cardElement)
 	})
 
-
-
 	const imagePopup = document.querySelector('.popup_type_image')
 
 	cardImage.addEventListener('click', function () {
 		openPopupHandler(imagePopup, cardImage.src, cardImage.alt)
+	})
+
+	const likeCardButton = cardElement.querySelector('.card__like-button')
+
+	likeCardButton.addEventListener('click', function () {
+		likeCardHandler(cardElement)
 	})
 
 	return cardElement
@@ -48,15 +56,24 @@ function createCard(card, deleteCardHandler, openPopupHandler) {
 
 
 // Функция удаления карточки
+
 function deleteCard(card) {
 	card.remove()
 }
 
+// Функция лайка карточки
+
+function likeCard(card) {
+	const likeButton = card.querySelector('.card__like-button')
+	likeButton.classList.toggle('card__like-button_is-active')
+}
+
 
 // Функция вывода карточек на страницу
+
 function renderHasCards(cards) {
 	for (let card of cards) {
-		const cardElement = createCard(card, deleteCard, openPopup)
+		const cardElement = createCard(card, deleteCard, openPopup, likeCard)
 		placesList.append(cardElement)
 	}
 }
@@ -74,6 +91,12 @@ function openPopup(popup, imgSrc, imgAlt) {
 		imagePopup.alt = imgAlt
 		imageCaption.textContent = imgAlt
 	}
+	if (popup === editPopup) {
+		const profileForm = document.forms['edit-profile']
+		profileForm.name.value = profileTitle.textContent
+		profileForm.description.value = profileDescription.textContent
+	}
+
 	popup.classList.add('popup_is-animated')
 	setTimeout(() => popup.classList.add('popup_is-opened'), 1)
 
@@ -104,7 +127,7 @@ function closePopupEscape(evt) {
 function closePopupOverlay(evt) {
 	const openedPopup = document.querySelector('.popup_is-opened')
 
-	if (openPopup && evt.target === evt.currentTarget) {
+	if (openedPopup && evt.target === evt.currentTarget) {
 		closePopup(openedPopup)
 	}
 	deleteEventListener()
@@ -118,7 +141,7 @@ function deleteEventListener() {
 }
 
 
-// Прослушиватели
+// Слушатели
 
 profileEditBtn.addEventListener('click', function () {
 	openPopup(editPopup)
@@ -136,3 +159,37 @@ closePopupBtns.forEach(function (closePopupBtn) {
 		}
 	})
 })
+
+// Обработчик формы редактирования профиля
+
+const formEditProfile = document.forms['edit-profile']
+
+function handleFormEditSubmit(evt) {
+	evt.preventDefault()
+	const nameInput = formEditProfile.name.value
+	const jobInput = formEditProfile.description.value
+	profileTitle.textContent = nameInput
+	profileDescription.textContent = jobInput
+
+	closePopup(editPopup)
+}
+
+formEditProfile.addEventListener('submit', handleFormEditSubmit)
+
+// Обработчик формы добавления картинки
+
+const formNewPlace = document.forms['new-place']
+
+function handleFormPlaceSubmit(evt) {
+	evt.preventDefault()
+	const name = formNewPlace['place-name'].value
+	const link = formNewPlace.link.value
+	const card = { name, link }
+	const cardElement = createCard(card, deleteCard, openPopup, likeCard)
+	placesList.prepend(cardElement)
+	formNewPlace.reset()
+
+	closePopup(newCardPopup)
+}
+
+formNewPlace.addEventListener('submit', handleFormPlaceSubmit)
