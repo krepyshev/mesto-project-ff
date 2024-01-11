@@ -8,62 +8,35 @@ export const profileDescription = profileInfo.querySelector('.profile__descripti
 
 // Функция открытия popup
 
-function openPopup(popup, imgSrc, imgAlt) {
-	const imagePopup = document.querySelector('.popup__image')
-	const imageCaption = document.querySelector('.popup__caption')
-	if (imgSrc) {
-		imagePopup.src = imgSrc
-		imagePopup.alt = imgAlt
-		imageCaption.textContent = imgAlt
-	}
-	if (popup === editPopup) {
-		const profileForm = document.forms['edit-profile']
-		profileForm.name.value = profileTitle.textContent
-		profileForm.description.value = profileDescription.textContent
-	}
-
-	popup.classList.add('popup_is-animated')
-	setTimeout(() => popup.classList.add('popup_is-opened'), 1)
-
+function openPopup(popup) {
+	popup.classList.add('popup_is-opened')
 	document.addEventListener('keydown', closePopupEscape)
-	popup.addEventListener('click', closePopupOverlay)
 }
 
 // Функция закрытия popup по кнопке
 
 function closePopup(popup) {
 	popup.classList.remove('popup_is-opened')
-	setTimeout(() => popup.classList.remove('popup_is-animated'), 1000)
-	deleteEventListener()
+	document.removeEventListener('keydown', closePopupEscape)
 }
 
 // Функция закрытия popup по Escape
 
 function closePopupEscape(evt) {
-	const openedPopup = document.querySelector('.popup_is-opened')
-	if (openedPopup && evt.key === 'Escape') {
+	if (evt.key === 'Escape') {
+		const openedPopup = document.querySelector('.popup_is-opened')
 		closePopup(openedPopup)
 	}
-	deleteEventListener()
 }
 
 // Функция закрытия popup по overlay
 
 function closePopupOverlay(evt) {
-	const openedPopup = document.querySelector('.popup_is-opened')
-
-	if (openedPopup && evt.target === evt.currentTarget) {
-		closePopup(openedPopup)
-	}
-	deleteEventListener()
+	if (evt.target === evt.currentTarget) { 
+		closePopup(evt.target) 
+	}  
 }
 
-// Функция удаления слушателей
-
-function deleteEventListener() {
-	document.removeEventListener('keydown', closePopupEscape)
-	document.removeEventListener('click', closePopupOverlay)
-}
 
 export {
 	openPopup,

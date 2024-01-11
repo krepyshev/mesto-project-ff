@@ -14,6 +14,7 @@ import {
 	editPopup,
 	profileTitle,
 	profileDescription,
+	closePopupOverlay
 } from '../components/modal'
 
 
@@ -28,11 +29,20 @@ const newCardPopup = document.querySelector('.popup_type_new-card')
 const closePopupBtns = document.querySelectorAll('.popup__close')
 
 
+
+document
+  .querySelectorAll('.popup')
+  .forEach((popup) => popup.classList.add('popup_is-animated'))
+
 renderHasCards(initialCards)
+
 
 // Слушатели
 
 profileEditBtn.addEventListener('click', function () {
+	const profileForm = document.forms['edit-profile']
+	profileForm.name.value = profileTitle.textContent
+	profileForm.description.value = profileDescription.textContent
 	openPopup(editPopup)
 })
 
@@ -40,14 +50,12 @@ profileAddBtn.addEventListener('click', function () {
 	openPopup(newCardPopup)
 })
 
-closePopupBtns.forEach(function (closePopupBtn) {
-	closePopupBtn.addEventListener('click', function () {
-		const openedPopup = document.querySelector('.popup_is-opened')
-		if (openedPopup) {
-			closePopup(openedPopup)
-		}
-	})
-})
+
+closePopupBtns.forEach(closePopupBtn => {
+  const popup = closePopupBtn.closest('.popup')
+  closePopupBtn.addEventListener('click', () => closePopup(popup))
+  popup.addEventListener('mousedown', closePopupOverlay)
+}) 
 
 // Обработчик формы редактирования профиля
 
@@ -74,7 +82,7 @@ function handleFormPlaceSubmit(evt) {
 	const name = formNewPlace['place-name'].value
 	const link = formNewPlace.link.value
 	const card = { name, link }
-	const cardElement = createCard(card, deleteCard, openPopup, likeCard)
+	const cardElement = createCard(card, deleteCard, PopupImage, likeCard)
 	placesList.prepend(cardElement)
 	formNewPlace.reset()
 
