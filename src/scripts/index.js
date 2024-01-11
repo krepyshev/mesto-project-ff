@@ -6,14 +6,12 @@ import {
 	createCard,
 	deleteCard,
 	likeCard,
-	renderHasCards
+	addImagePopup
 } from '../components/card'
 import {
 	openPopup,
 	closePopup,
 	editPopup,
-	profileTitle,
-	profileDescription,
 	closePopupOverlay
 } from '../components/modal'
 
@@ -26,15 +24,34 @@ const profileEditBtn = container.querySelector('.profile__edit-button')
 const profileAddBtn = container.querySelector('.profile__add-button')
 
 const newCardPopup = document.querySelector('.popup_type_new-card')
+const imagePopup = document.querySelector('.popup_type_image')
 const closePopupBtns = document.querySelectorAll('.popup__close')
 
-
+const profileInfo = document.querySelector('.profile__info')
+const profileTitle = profileInfo.querySelector('.profile__title')
+const profileDescription = profileInfo.querySelector('.profile__description')
 
 document
   .querySelectorAll('.popup')
   .forEach((popup) => popup.classList.add('popup_is-animated'))
 
+// Функция вывода карточек на страницу
+
+function renderHasCards(cards) {
+	for (let card of cards) {
+		const cardElement = createCard(card, deleteCard, openImagePopup, likeCard)
+		placesList.append(cardElement)
+	}
+}
+
 renderHasCards(initialCards)
+
+// Функция открытия popup с изображением
+
+function openImagePopup(name, link) {
+	addImagePopup(name, link)
+	openPopup(imagePopup)
+}
 
 
 // Слушатели
@@ -49,7 +66,6 @@ profileEditBtn.addEventListener('click', function () {
 profileAddBtn.addEventListener('click', function () {
 	openPopup(newCardPopup)
 })
-
 
 closePopupBtns.forEach(closePopupBtn => {
   const popup = closePopupBtn.closest('.popup')
@@ -82,7 +98,7 @@ function handleFormPlaceSubmit(evt) {
 	const name = formNewPlace['place-name'].value
 	const link = formNewPlace.link.value
 	const card = { name, link }
-	const cardElement = createCard(card, deleteCard, PopupImage, likeCard)
+	const cardElement = createCard(card, deleteCard, openImagePopup, likeCard)
 	placesList.prepend(cardElement)
 	formNewPlace.reset()
 

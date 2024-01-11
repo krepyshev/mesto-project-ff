@@ -1,17 +1,12 @@
 export const editPopup = document.querySelector('.popup_type_edit')
 
-const profileInfo = document.querySelector('.profile__info')
-export const profileTitle = profileInfo.querySelector('.profile__title')
-export const profileDescription = profileInfo.querySelector('.profile__description')
-
-
-
 // Функция открытия popup
 
 function openPopup(popup) {
-	popup.classList.add('popup_is-opened')
-	document.addEventListener('keydown', closePopupEscape)
+			popup.classList.add('popup_is-opened');
+			document.addEventListener('keydown', closePopupEscape);
 }
+
 
 // Функция закрытия popup по кнопке
 

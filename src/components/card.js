@@ -1,12 +1,9 @@
-import {
-	openPopup
-} from './modal'
-
 // Темплейт карточки
 const cardTemplate = document.querySelector('#card-template').content
 
-const container = document.querySelector('.content')
-const placesList = container.querySelector('.places__list')
+const image = document.querySelector('.popup__image')
+const imageCaption = document.querySelector('.popup__caption')
+
 
 // Функция создания карточки
 
@@ -23,9 +20,7 @@ function createCard(card, deleteCardHandler, openPopupHandler, likeCardHandler) 
 		deleteCardHandler(cardElement)
 	})
 
-	const imagePopup = document.querySelector('.popup_type_image')
-
-	cardImage.addEventListener('click', function () {
+  cardImage.addEventListener('click', function () {
 		openPopupHandler(cardImage.alt, cardImage.src)
 	})
 
@@ -53,32 +48,18 @@ function likeCard(card) {
 
 // Функция добавления изображения в popup image
 
-function PopupImage(imgAlt, imgSrc) {
-	const imagePopup = document.querySelector('.popup_type_image')
-	const image = document.querySelector('.popup__image')
-	const imageCaption = document.querySelector('.popup__caption')
+function addImagePopup(imgAlt, imgSrc) {
 	if (imgSrc) {
 		image.src = imgSrc
 		image.alt = imgAlt
 		imageCaption.textContent = imgAlt
 	}
-	openPopup(imagePopup)
 }
 
-
-// Функция вывода карточек на страницу
-
-
-function renderHasCards(cards) {
-	for (let card of cards) {
-		const cardElement = createCard(card, deleteCard, PopupImage, likeCard)
-		placesList.append(cardElement)
-	}
-}
 
 export {
 	createCard,
 	deleteCard,
 	likeCard,
-	renderHasCards
+  addImagePopup
 }
