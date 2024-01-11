@@ -1,18 +1,20 @@
 import '../pages/index.css'
 import {
-	initialCards,
+	initialCards
+} from '../components/cards'
+import {
 	createCard,
 	deleteCard,
 	likeCard,
 	renderHasCards
-} from '../components/cards'
+} from '../components/card'
 import {
 	openPopup,
 	closePopup,
 	editPopup,
 	profileTitle,
 	profileDescription,
-} from '../components/modals'
+} from '../components/modal'
 
 
 // DOM узлы
