@@ -1,5 +1,3 @@
-export const editPopup = document.querySelector('.popup_type_edit')
-
 // Функция открытия popup
 
 function openPopup(popup) {

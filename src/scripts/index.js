@@ -5,13 +5,11 @@ import {
 import {
 	createCard,
 	deleteCard,
-	likeCard,
-	addImagePopup
+	likeCard
 } from '../components/card'
 import {
 	openPopup,
 	closePopup,
-	editPopup,
 	closePopupOverlay
 } from '../components/modal'
 
@@ -25,11 +23,16 @@ const profileAddBtn = container.querySelector('.profile__add-button')
 
 const newCardPopup = document.querySelector('.popup_type_new-card')
 const imagePopup = document.querySelector('.popup_type_image')
+const editPopup = document.querySelector('.popup_type_edit')
+
 const closePopupBtns = document.querySelectorAll('.popup__close')
 
 const profileInfo = document.querySelector('.profile__info')
 const profileTitle = profileInfo.querySelector('.profile__title')
 const profileDescription = profileInfo.querySelector('.profile__description')
+
+const image = document.querySelector('.popup__image')
+const imageCaption = document.querySelector('.popup__caption')
 
 document
   .querySelectorAll('.popup')
@@ -46,10 +49,12 @@ function renderHasCards(cards) {
 
 renderHasCards(initialCards)
 
-// Функция открытия popup с изображением
+// Функция заполнения и открытия popup с изображением
 
 function openImagePopup(name, link) {
-	addImagePopup(name, link)
+	image.src = link
+	image.alt = link
+	imageCaption.textContent = name
 	openPopup(imagePopup)
 }
 

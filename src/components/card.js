@@ -1,9 +1,6 @@
 // Темплейт карточки
 const cardTemplate = document.querySelector('#card-template').content
 
-const image = document.querySelector('.popup__image')
-const imageCaption = document.querySelector('.popup__caption')
-
 
 // Функция создания карточки
 
@@ -46,20 +43,9 @@ function likeCard(card) {
 	likeButton.classList.toggle('card__like-button_is-active')
 }
 
-// Функция добавления изображения в popup image
-
-function addImagePopup(imgAlt, imgSrc) {
-	if (imgSrc) {
-		image.src = imgSrc
-		image.alt = imgAlt
-		imageCaption.textContent = imgAlt
-	}
-}
-
 
 export {
 	createCard,
 	deleteCard,
-	likeCard,
-  addImagePopup
+	likeCard
 }
