@@ -127,22 +127,47 @@ formNewPlace.addEventListener('submit', handleFormPlaceSubmit)
 // const formError = form.querySelector(`.${formInput.id}-error`);
 
 const showInputError = (formElement, inputElement, errorMessage) => {
-	const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
+	const errorElement = formElement.querySelector(`.${inputElement.id}-error`)
 	inputElement.classList.add('popup__input_type_error')
 	errorElement.textContent = errorMessage
 	errorElement.classList.add('popup__error_visible')
-};
+}
 
 const hideInputError = (formElement, inputElement) => {
-	const errorElement = formElement.querySelector(`.${inputElement.id}-error`);
+	const errorElement = formElement.querySelector(`.${inputElement.id}-error`)
 	inputElement.classList.remove('popup__input_type_error')
 	errorElement.classList.remove('popup__error_visible')
 	errorElement.textContent = ''
-};
+}
 
 function checkInputValidity(formElement, inputElement) {
+	let regex
+	switch (inputElement.id) {
+		case 'name-input':
+		case 'description-input':
+		case 'place-name':
+			regex = /^[a-zA-Zа-яА-ЯёЁ\s\-]+$/
+			inputElement.setAttribute('data-error-message', 'Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы')
+			break
+		case 'url-input':
+			regex = /^(ftp|http|https):\/\/[^ "]+$/
+			inputElement.setAttribute('data-error-message', 'Введите адрес сайта')
+			break
+		default:
+			regex = null
+	}
+
+	if (regex !== null) {
+		if (!regex.test(inputElement.value)) {
+			inputElement.setCustomValidity(inputElement.dataset.errorMessage)
+		} else {
+			inputElement.setCustomValidity('')
+			inputElement.removeAttribute('data-error-message')
+		}
+	}
+
 	if (!inputElement.validity.valid) {
-		showInputError(formElement, inputElement, inputElement.validationMessage);
+		showInputError(formElement, inputElement, inputElement.validationMessage)
 	} else {
 		hideInputError(formElement, inputElement)
 	}
