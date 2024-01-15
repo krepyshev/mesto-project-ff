@@ -12,6 +12,12 @@ import {
 	closePopup,
 	closePopupOverlay
 } from '../components/modal'
+import { error } from 'jquery'
+// import {
+// 	enableValidation,
+// 	validationConfig,
+// 	clearValidation
+// } from '../components/validation'
 
 
 // DOM узлы
@@ -35,8 +41,8 @@ const image = document.querySelector('.popup__image')
 const imageCaption = document.querySelector('.popup__caption')
 
 document
-  .querySelectorAll('.popup')
-  .forEach((popup) => popup.classList.add('popup_is-animated'))
+	.querySelectorAll('.popup')
+	.forEach((popup) => popup.classList.add('popup_is-animated'))
 
 // Функция вывода карточек на страницу
 
@@ -73,10 +79,10 @@ profileAddBtn.addEventListener('click', function () {
 })
 
 closePopupBtns.forEach(closePopupBtn => {
-  const popup = closePopupBtn.closest('.popup')
-  closePopupBtn.addEventListener('click', () => closePopup(popup))
-  popup.addEventListener('mousedown', closePopupOverlay)
-}) 
+	const popup = closePopupBtn.closest('.popup')
+	closePopupBtn.addEventListener('click', () => closePopup(popup))
+	popup.addEventListener('mousedown', closePopupOverlay)
+})
 
 // Обработчик формы редактирования профиля
 
@@ -111,3 +117,56 @@ function handleFormPlaceSubmit(evt) {
 }
 
 formNewPlace.addEventListener('submit', handleFormPlaceSubmit)
+
+
+
+
+// validation
+
+const formElement = document.querySelector('.popup__form');
+const formInput = formElement.querySelector('.popup__input');
+const formError = formElement.querySelector('.popup__error')
+
+const showError = (input, errorMessage) => {
+	input.classList.add('popup__input_type_error')
+	formError.textContent = errorMessage
+	formError.classList.add('popup__error_visible')
+};
+
+const hideError = (input) => {
+	input.classList.remove('popup__input_type_error')
+	formError.classList.remove('popup__error_visible')
+	formError.textContent = ''
+};
+
+function checkInputValidity() {
+	if (!formInput.validity.valid) {
+		showError(formInput, formInput.validationMessage);
+	} else {
+		hideError(formInput)
+	}
+}
+
+formElement.addEventListener('submit', function (evt) {
+	evt.preventDefault();
+});
+
+
+formInput.addEventListener('input', function () {
+	checkInputValidity();
+});
+
+
+
+
+// включение валидации вызовом enableValidation
+// все настройки передаются при вызове
+
+// enableValidation({
+// 	formSelector: '.popup__form',
+// 	inputSelector: '.popup__input',
+// 	submitButtonSelector: '.popup__button',
+// 	inactiveButtonClass: 'popup__button_disabled',
+// 	inputErrorClass: 'popup__input_type_error',
+// 	errorClass: 'popup__error_visible'
+// });
