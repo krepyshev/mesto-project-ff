@@ -4,14 +4,17 @@ const cardTemplate = document.querySelector('#card-template').content
 
 // Функция создания карточки
 
-function createCard(card, deleteCardHandler, openPopupHandler, likeCardHandler) {
+function createCard(card, deleteCardHandler, openPopupHandler, likeCardHandler, currentUserID) {
 	const cardElement = cardTemplate.querySelector('.card').cloneNode(true)
 	cardElement.querySelector('.card__title').textContent = card.name
 	const cardImage = cardElement.querySelector('.card__image')
 	cardImage.src = card.link
 	cardImage.alt = card.name
 
-	// дополнительное решение. возможно надо вообще их не показывать, но реализовал так.
+	const likeCardCount = cardElement.querySelector('.card__like-count')
+	likeCardCount.textContent = card.likes.length
+
+	// дополнительное решение, чтобы вёрстка не схлапывалась
 	cardImage.onerror = function () {
 		cardImage.src = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIj4KICA8cGF0aCBkPSJNMTAwLDEwMCBMIDAuNSwwIFoiIGlkPSJjaHJvbGxUaW1lci1ncm91cCIgZmlsbD0ibm9uZSIgc3R5bGU9ImZpbGw6YmxhY2s7IiAvPgo8cGF0aCBkPSJNNTAsNTAiIGlkPSJiYXIiIHN0eWxlPSJmaWxsOmJsYWNrOyIvPgo8L3N2Zz4K'
 		cardImage.alt = 'Изображение недоступно'
@@ -19,9 +22,16 @@ function createCard(card, deleteCardHandler, openPopupHandler, likeCardHandler) 
 
 	const deleteCardButton = cardElement.querySelector('.card__delete-button')
 
-	deleteCardButton.addEventListener('click', function () {
-		deleteCardHandler(cardElement)
-	})
+	if (card.owner._id === currentUserID) {
+		deleteCardButton.addEventListener('click', function () {
+			const isConfirmed = confirm('Вы уверены, что хотите удалить эту карточку?')
+			if (isConfirmed) {
+					deleteCardHandler(cardElement, card._id)
+			}
+		})
+	} else {
+		deleteCardButton.classList.add('card__delete-button-display-none')
+	}
 
 	cardImage.addEventListener('click', function () {
 		openPopupHandler(cardImage.alt, cardImage.src)
@@ -36,11 +46,6 @@ function createCard(card, deleteCardHandler, openPopupHandler, likeCardHandler) 
 	return cardElement
 }
 
-// Функция удаления карточки
-
-function deleteCard(card) {
-	card.remove()
-}
 
 // Функция лайка карточки
 
@@ -52,6 +57,5 @@ function likeCard(card) {
 
 export {
 	createCard,
-	deleteCard,
 	likeCard
 }

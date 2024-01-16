@@ -29,3 +29,52 @@ export const getUserInfo = () => {
 			return Promise.reject(`Ошибка: ${res.status}`)
 		})
 }
+
+export const editUserInfo = (name, about) => {
+	return fetch(`${config.baseUrl}/users/me`, {
+		method: 'PATCH',
+		headers: config.headers,
+		body: JSON.stringify({
+			name: name,
+			about: about
+		})
+	})
+	.then(res => {
+		if (res.ok) {
+			return res.json()
+		}
+		return Promise.reject(`Ошибка: ${res.status}`)
+	})
+}
+
+export const addNewCard = (name, link, currentUserId) => {
+	return fetch(`${config.baseUrl}/cards`, {
+		method: 'POST',
+		headers: config.headers,
+		body: JSON.stringify({
+			name: name,
+			link: link,
+			ownerId: currentUserId
+		})
+	})
+	.then(res => {
+		if (res.ok) {
+			return res.json()
+		}
+		return Promise.reject(`Ошибка: ${res.status}`)
+	})
+}
+
+export const deleteCard = (cardElement, cardId) => {
+	return fetch(`${config.baseUrl}/cards/${cardId}`, {
+		method: 'DELETE',
+		headers: config.headers,
+	})
+	.then(res => {
+			if (res.ok) {
+				cardElement.remove()
+				return res.json()
+			}
+			return Promise.reject(`Ошибка: ${res.status}`)
+	})
+	}
