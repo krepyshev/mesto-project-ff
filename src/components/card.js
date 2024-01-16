@@ -11,13 +11,19 @@ function createCard(card, deleteCardHandler, openPopupHandler, likeCardHandler) 
 	cardImage.src = card.link
 	cardImage.alt = card.name
 
+	// дополнительное решение. возможно надо вообще их не показывать, но реализовал так.
+	cardImage.onerror = function () {
+		cardImage.src = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIj4KICA8cGF0aCBkPSJNMTAwLDEwMCBMIDAuNSwwIFoiIGlkPSJjaHJvbGxUaW1lci1ncm91cCIgZmlsbD0ibm9uZSIgc3R5bGU9ImZpbGw6YmxhY2s7IiAvPgo8cGF0aCBkPSJNNTAsNTAiIGlkPSJiYXIiIHN0eWxlPSJmaWxsOmJsYWNrOyIvPgo8L3N2Zz4K'
+		cardImage.alt = 'Изображение недоступно'
+	}
+
 	const deleteCardButton = cardElement.querySelector('.card__delete-button')
 
 	deleteCardButton.addEventListener('click', function () {
 		deleteCardHandler(cardElement)
 	})
 
-  cardImage.addEventListener('click', function () {
+	cardImage.addEventListener('click', function () {
 		openPopupHandler(cardImage.alt, cardImage.src)
 	})
 

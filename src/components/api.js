@@ -12,10 +12,20 @@ export const getInitialCards = () => {
 	})
 		.then(res => {
 			if (res.ok) {
-				return res.json();
+				return res.json()
 			}
+			return Promise.reject(`Ошибка: ${res.status}`)
+		})
+}
 
-			// если ошибка, отклоняем промис
-			return Promise.reject(`Ошибка: ${res.status}`);
-		});
+export const getUserInfo = () => {
+	return fetch(`${config.baseUrl}/users/me`, {
+		headers: config.headers
+	})
+		.then(res => {
+			if (res.ok) {
+				return res.json()
+			}
+			return Promise.reject(`Ошибка: ${res.status}`)
+		})
 }
