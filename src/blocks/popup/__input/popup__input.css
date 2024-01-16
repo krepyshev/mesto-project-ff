@@ -15,14 +15,9 @@
 	margin-bottom: 0;
 }
 
-.popup__input:invalid {
+.popup__input_type_error:invalid {
 	border-bottom: 1px solid #f00;
 }
-
-.popup__input:invalid:placeholder-shown {
-	border-color: rgba(0, 0, 0, .2);
-}
-
 
 @media screen and (max-width: 568px) {
 	.popup__title {
