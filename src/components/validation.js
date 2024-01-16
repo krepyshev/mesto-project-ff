@@ -101,4 +101,4 @@ function clearValidation(formElement, options) {
 	buttonElement.setAttribute('disabled', 'disabled')
 }
 
-export {enableValidation, clearValidation}
+export { enableValidation, clearValidation }

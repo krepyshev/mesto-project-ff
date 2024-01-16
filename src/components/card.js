@@ -24,9 +24,10 @@ function createCard(card, deleteCardHandler, openPopupHandler, likeCardHandler, 
 
 	if (card.owner._id === currentUserID) {
 		deleteCardButton.addEventListener('click', function () {
+			// дополнительное решение, подтверждение удаления, правда без popup :(
 			const isConfirmed = confirm('Вы уверены, что хотите удалить эту карточку?')
 			if (isConfirmed) {
-					deleteCardHandler(cardElement, card._id)
+				deleteCardHandler(cardElement, card._id)
 			}
 		})
 	} else {
@@ -39,23 +40,26 @@ function createCard(card, deleteCardHandler, openPopupHandler, likeCardHandler, 
 
 	const likeCardButton = cardElement.querySelector('.card__like-button')
 
-	likeCardButton.addEventListener('click', function () {
-		likeCardHandler(cardElement)
+	likeCardButton.addEventListener('click', function (event) {
+		likeCardHandler(cardElement, card._id)
 	})
+
 
 	return cardElement
 }
 
 
-// Функция лайка карточки
+// Функция обновления лайка карточки
 
-function likeCard(card) {
-	const likeButton = card.querySelector('.card__like-button')
+
+function updateLikeCount(cardElement, likeCount) {
+	cardElement.querySelector('.card__like-count').textContent = likeCount
+	const likeButton = cardElement.querySelector('.card__like-button')
 	likeButton.classList.toggle('card__like-button_is-active')
 }
 
 
 export {
 	createCard,
-	likeCard
+	updateLikeCount
 }
