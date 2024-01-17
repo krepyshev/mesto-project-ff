@@ -1,19 +1,19 @@
 
-const showInputError = (formElement, inputElement, errorMessage) => {
+const showInputError = (formElement, inputElement, errorMessage, settings) => {
 	const errorElement = formElement.querySelector(`.${inputElement.id}-error`)
-	inputElement.classList.add('popup__input_type_error')
+	inputElement.classList.add(settings.inputErrorClass)
 	errorElement.textContent = errorMessage
-	errorElement.classList.add('popup__error_visible')
+	errorElement.classList.add(settings.errorClass)
 }
 
-const hideInputError = (formElement, inputElement) => {
+const hideInputError = (formElement, inputElement, settings) => {
 	const errorElement = formElement.querySelector(`.${inputElement.id}-error`)
-	inputElement.classList.remove('popup__input_type_error')
-	errorElement.classList.remove('popup__error_visible')
+	inputElement.classList.remove(settings.inputErrorClass)
+	errorElement.classList.remove(settings.errorClass)
 	errorElement.textContent = ''
 }
 
-function checkInputValidity(formElement, inputElement) {
+function checkInputValidity(formElement, inputElement, settings) {
 	let regex
 	switch (inputElement.id) {
 		case 'name-input':
@@ -40,33 +40,33 @@ function checkInputValidity(formElement, inputElement) {
 	}
 
 	if (!inputElement.validity.valid) {
-		showInputError(formElement, inputElement, inputElement.validationMessage)
+		showInputError(formElement, inputElement, inputElement.validationMessage, settings)
 	} else {
-		hideInputError(formElement, inputElement)
+		hideInputError(formElement, inputElement, settings)
 	}
 }
 
-function setEventListener(formElement) {
-	const inputList = Array.from(formElement.querySelectorAll('.popup__input'))
-	const buttonElement = formElement.querySelector('.popup__button')
+function setEventListener(formElement, settings) {
+	const inputList = Array.from(formElement.querySelectorAll(settings.inputSelector))
+	const buttonElement = formElement.querySelector(settings.submitButtonSelector)
 
-	toggleButtonState(inputList, buttonElement)
+	toggleButtonState(inputList, buttonElement, settings)
 
 	inputList.forEach((inputElement) => {
 		inputElement.addEventListener('input', () => {
-			checkInputValidity(formElement, inputElement)
-			toggleButtonState(inputList, buttonElement)
+			checkInputValidity(formElement, inputElement, settings)
+			toggleButtonState(inputList, buttonElement, settings)
 		})
 	})
 }
 
-function enableValidation(options) {
-	const formList = Array.from(document.querySelectorAll(options.formSelector))
+function enableValidation(settings) {
+	const formList = Array.from(document.querySelectorAll(settings.formSelector))
 	formList.forEach((formElement) => {
 		formElement.addEventListener('submit', function (evt) {
 			evt.preventDefault()
 		})
-		setEventListener(formElement)
+		setEventListener(formElement, settings)
 	})
 }
 
@@ -76,28 +76,29 @@ function hasInvalidInput(inputList) {
 	})
 }
 
-function toggleButtonState(inputList, buttonElement) {
+function toggleButtonState(inputList, buttonElement, settings) {
 	if (hasInvalidInput(inputList)) {
-		buttonElement.classList.add('popup__button_disabled')
+		buttonElement.classList.add(settings.inactiveButtonClass)
 		buttonElement.setAttribute('disabled', 'disabled')
 	}
 	else {
-		buttonElement.classList.remove('popup__button_disabled')
+		buttonElement.classList.remove(settings.inactiveButtonClass)
 		buttonElement.removeAttribute('disabled')
 	}
 }
 
-function clearValidation(formElement, options) {
-	const inputList = Array.from(formElement.querySelectorAll(options.inputSelector))
-	const buttonElement = formElement.querySelector(options.submitButtonSelector)
+
+function clearValidation(formElement, settings) {
+	const inputList = Array.from(formElement.querySelectorAll(settings.inputSelector))
+	const buttonElement = formElement.querySelector(settings.submitButtonSelector)
 
 	inputList.forEach((inputElement) => {
-		hideInputError(formElement, inputElement)
+		hideInputError(formElement, inputElement, settings)
 		inputElement.setCustomValidity('')
 		inputElement.removeAttribute('data-error-message')
 	})
 
-	buttonElement.classList.add(options.inactiveButtonClass)
+	buttonElement.classList.add(settings.inactiveButtonClass)
 	buttonElement.setAttribute('disabled', 'disabled')
 }
 

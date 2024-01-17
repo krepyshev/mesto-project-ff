@@ -55,6 +55,7 @@ let now = new Date()
 const copyright = document.querySelector('.footer__copyright')
 copyright.textContent = `© ${now.getFullYear()} Mesto Russia`
 
+let currentUserId
 
 document
 	.querySelectorAll('.popup')
@@ -69,13 +70,6 @@ function renderHasCards(getInitialCards, currentUserId) {
 			.then(cards => {
 				for (let card of cards) {
 					const cardElement = createCard(card, deleteCard, openImagePopup, likeCardHandler, currentUserId)
-					const isLikedByCurrentUser = card.likes.some(like => like._id === currentUserId)
-
-					if (isLikedByCurrentUser) {
-						const likeButton = cardElement.querySelector('.card__like-button')
-						likeButton.classList.add('card__like-button_is-active')
-					}
-
 					placesList.append(cardElement)
 				}
 				resolve()
@@ -149,7 +143,7 @@ const formEditAvatar = document.forms['edit-avatar']
 function handleFormEditAvatarSubmit(evt) {
 	evt.preventDefault()
 	const linkAvatar = formEditAvatar['link-avatar'].value
-	const submitButton = evt.target.closest('form').querySelector('.popup__button')
+	const submitButton = evt.submitter
 	submitButton.textContent = 'Сохранение...'
 	patchAvatar(linkAvatar)
 		.then(updatedUserAvatar => {
@@ -175,7 +169,7 @@ function handleFormEditSubmit(evt) {
 	evt.preventDefault()
 	const nameInput = formEditProfile.name.value
 	const jobInput = formEditProfile.description.value
-	const submitButton = evt.target.closest('form').querySelector('.popup__button')
+	const submitButton = evt.submitter
 	submitButton.textContent = 'Сохранение...'
 	editUserInfo(nameInput, jobInput)
 		.then(updateUserInfo => {
@@ -202,11 +196,11 @@ function handleFormPlaceSubmit(evt) {
 	evt.preventDefault()
 	const name = formNewPlace['place-name'].value
 	const link = formNewPlace.link.value
-	const submitButton = evt.target.closest('form').querySelector('.popup__button')
+	const submitButton = evt.submitter
 	submitButton.textContent = 'Создание...'
-	addNewCard(name, link)
+	addNewCard(name, link, currentUserId)
 		.then(newCard => {
-			const cardElement = createCard(newCard, deleteCard, openImagePopup, likeCard)
+			const cardElement = createCard(newCard, deleteCard, openImagePopup, likeCardHandler, currentUserId)
 			placesList.prepend(cardElement)
 			formNewPlace.reset()
 			clearValidation(formNewPlace, validationConfig)
@@ -242,12 +236,13 @@ const promiseArray = [getUserInfo(), getInitialCards]
 
 Promise.all(promiseArray)
 	.then(([userInfo, initialCards]) => {
-		const currentUserID = userInfo._id
+		currentUserId = userInfo._id
 		profileTitle.textContent = userInfo.name
 		profileDescription.textContent = userInfo.about
 		profileImage.style.backgroundImage = `url(${userInfo.avatar})`
 
-		renderHasCards(initialCards, currentUserID)
+		renderHasCards(initialCards, currentUserId)
+		return currentUserId
 	})
 	.catch(error => {
 		console.error('Ошибка при загрузке данных:', error)
